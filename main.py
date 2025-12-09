@@ -57,7 +57,12 @@ def add_password():
     pw_choice = input("Do you want to generate a random strong password? (y/n): ")
 
     if pw_choice.lower() == "y":
-        length = int(input("Password length: "))
+        while True:
+            length = int(input("Password length (min. 8 characters): "))
+            if length >= 8:
+                break
+            else:
+                print("Password must be at least 8 characters. Please try again.")
         password = generate_password(length)
         print("Generated password:", password)
     else:
