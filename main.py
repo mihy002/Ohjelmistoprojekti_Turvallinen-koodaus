@@ -8,12 +8,19 @@ def caesar_encrypt(text, shift):
     for char in text:
         if char.isalpha():
             shifted = ord(char) + shift
+
             if char.islower():
                 if shifted > ord('z'):
                     shifted -= 26
+                elif shifted < ord('a'):
+                    shifted += 26
+
             elif char.isupper():
                 if shifted > ord('Z'):
                     shifted -= 26
+                elif shifted < ord('A'):
+                    shifted += 26
+
             encrypted_text += chr(shifted)
         else:
             encrypted_text += char
@@ -51,10 +58,11 @@ def add_password():
 
     if pw_choice.lower() == "y":
         while True:
-            length = int(input("Password length (min. 8 characters): "))
-            if length >= 8:
-                break
-            else:
+            try:
+                length = int(input("Password length (min. 8 characters): "))
+                if length >= 8:
+                    break
+            except ValueError:
                 print("Password must be at least 8 characters. Please try again.")
         password = generate_password(length)
         print("Generated password:", password)
@@ -62,7 +70,7 @@ def add_password():
         password = input("Password: ")
 
         if not is_strong_password(password):
-            print("Warning: password is weak (short or missing character types).")
+            print("Warning: password is weak (short or missing character types. We recommend that you change your password to a stronger one.).")
 
     encrypted = caesar_encrypt(password, SHIFT)
 
