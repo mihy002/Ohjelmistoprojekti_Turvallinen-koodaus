@@ -3,6 +3,7 @@ import re
 import random
 import string
 
+# Korjattu Caesar-salauksen purku, jotta negatiivinen siirto toimii oikein
 def caesar_encrypt(text, shift):
     encrypted_text = ""
     for char in text:
