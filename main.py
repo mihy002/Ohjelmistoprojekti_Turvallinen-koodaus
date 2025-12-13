@@ -23,10 +23,6 @@ def caesar_decrypt(text, shift):
     return caesar_encrypt(text, -shift)
 
 def is_strong_password(password):
-    """
-    Check if the password is strong.
-    Strong password = at least 8 chars, upper, lower, digit, special char.
-    """
     if (len(password) >= 8
         and re.search("[A-Z]", password)
         and re.search("[a-z]", password)
@@ -36,9 +32,6 @@ def is_strong_password(password):
     return False
 
 def generate_password(length):
-    """
-    Generate a random strong password of the specified length.
-    """
     characters = string.ascii_letters + string.digits + "!@#$%^&*()_+=-"
     return "".join(random.choice(characters) for _ in range(length))
 
