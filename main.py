@@ -125,8 +125,6 @@ def load_passwords():
         usernames = data.get("usernames", [])
         encrypted_passwords = data.get("passwords", [])
 
-        print("Vault loaded successfully!")
-
     except FileNotFoundError:
         print("vault.txt not found. No passwords loaded.")
 
