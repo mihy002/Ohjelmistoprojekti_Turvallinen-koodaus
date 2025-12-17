@@ -43,11 +43,9 @@ def generate_password(length):
     characters = string.ascii_letters + string.digits + "!@#$%^&*()_+=-"
     return "".join(random.choice(characters) for _ in range(length))
 
-encrypted_passwords = []
-websites = []
-usernames = []
-
 SHIFT = 3
+
+vault = []  # Yksi lista kaikille salasanoille
 
 # Lisää uusi salasana
 def add_password():
@@ -77,9 +75,12 @@ def add_password():
             print("Warning: password may be weak.")
 
     encrypted = caesar_encrypt(password, SHIFT)
-    websites.append(website)
-    usernames.append(username)
-    encrypted_passwords.append(encrypted)
+
+    vault.append({
+        "websites": website,
+        "usernames": username,
+        "passwords": encrypted
+    })
 
     print("Password added!")
 
@@ -89,15 +90,13 @@ def get_password():
     website = input("Enter website: ")
 
     found = False
-    for i, site in enumerate(websites):
-        if site == website:
+    for entry in vault:
+        if entry["websites"] == website:
+            decrypted = caesar_decrypt(entry["passwords"], SHIFT)
+            print(f"\nUsername: {entry['usernames']}")            # Alussa tyhjä rivi selkeyttämään lukua
+            print(f"Password: {decrypted}")
             found = True
-            username = usernames[i]
-            encrypted_pw = encrypted_passwords[i]
-            decrypted_pw = caesar_decrypt(encrypted_pw, SHIFT)
 
-            print(f"\nUsername: {username}")    # Alussa tyhjä rivi erottamaan eri käyttäjätunnukset
-            print(f"Password: {decrypted_pw}")
     if not found:
         print("No password stored for this website.")
 
@@ -105,41 +104,36 @@ def get_password():
 def save_passwords():
     print("\nSaving passwords...")
 
-    data = {
+    ''' data = {
         "websites": websites,
         "usernames": usernames,
         "passwords": encrypted_passwords
-    }
+    } '''
 
     try:
         with open("vault.txt", "w") as f:
-            json.dump(data, f)
+            json.dump(vault, f, indent=4)
         print("Passwords saved to vault.txt!")
     except PermissionError:
         print("Error: Cannot write to vault.txt")
 
+
+
 # Palautetaan data tai None, jotta latauksen onnistuminen voidaan tarkistaa
 def load_passwords():
+    global vault
     print("\nLoading passwords...")
-
-    global websites, usernames, encrypted_passwords
 
     try:
         with open("vault.txt", "r") as f:
-            data = json.load(f)
-
-        websites = data.get("websites", [])
-        usernames = data.get("usernames", [])
-        encrypted_passwords = data.get("passwords", [])
-        return data
+            vault = json.load(f)
+        print("Password loaded!")
 
     except FileNotFoundError:
         print("Error: vault.txt not found. No passwords loaded.")
-        return None
 
     except json.JSONDecodeError:
         print("Error: vault.txt is corrupted or unreadable.")
-        return None
 
 def main():
 
